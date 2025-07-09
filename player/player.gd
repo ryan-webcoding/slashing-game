@@ -7,6 +7,7 @@ var is_slashing := false
 var is_moving := false
 
 func _ready():
+	randomize()  # Ensure randi() gives varied results
 	$animation_lower.play("idle_down")
 	$animation_higher.visible = false
 
@@ -53,11 +54,14 @@ func _process(delta):
 		is_slashing = true
 		if is_moving:
 			var anim_name = "run_slash_" + last_direction
+			print("🗡️ RUN SLASH:", anim_name)
 			$animation_higher.visible = true
 			$animation_higher.play(anim_name)
 			$animation_higher.connect("animation_finished", _on_slash_finished, CONNECT_ONE_SHOT)
 		else:
-			var anim_name = "idle_slash1_" + last_direction
+			var variation = randi() % 2 + 1  # Random 1 or 2
+			var anim_name = "idle_slash%d_%s" % [variation, last_direction]
+			print("🗡️ IDLE SLASH:", anim_name)
 			$animation_lower.play(anim_name)
 			$animation_lower.connect("animation_finished", _on_slash_finished, CONNECT_ONE_SHOT)
 
